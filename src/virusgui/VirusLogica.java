@@ -40,11 +40,8 @@ public class VirusLogica {
     static Integer selectedHostid;
     static Integer selectedHostid2; 
 
-    /**
-     *
-     * @param virusList
-     */
-    public static void makeComboboxList(ArrayList<Virus> virusList){
+    
+   public static void makeComboboxList(ArrayList<Virus> virusList){
      /**
      * Methode die na het inlezen van het bestand alle unieke Classificaties in een lijst zet door gebruik te maken van sets
      * Dit wordt ook gedaan voor alle unieke hostID's. De lijsten worden vervolgens in de combobox gezet.
@@ -63,11 +60,7 @@ public class VirusLogica {
        VirusGui.hostid2box.setModel(new DefaultComboBoxModel(hostidNameList.toArray()));
    }
    
-    /**
-     *
-     * @param virusList
-     */
-    public static void getaskedvirusList(ArrayList<Virus> virusList){
+   public static void getaskedvirusList(ArrayList<Virus> virusList){
     /**
      * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke classificatie gekozen is 
      * en een nieuwe lijst maakt met alle objecten die voldoen aan de filter keuze. Bij No filter wordt de complete lijst behouden.
@@ -85,11 +78,7 @@ public class VirusLogica {
        }
        }}
    
-    /**
-     *
-     * @param selectedvirusList
-     */
-    public static void getvirusbyhostList1(ArrayList<Virus> selectedvirusList){
+   public static void getvirusbyhostList1(ArrayList<Virus> selectedvirusList){
        /**
      * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke hostid gekozen is 
      * en een nieuwe lijst maakt met alle objecten die voldoen aan de filter keuze. Maar eerst worden de Sets leeg gemaakt
@@ -105,11 +94,7 @@ public class VirusLogica {
        }
        }}
    
-    /**
-     *
-     * @param selectedvirusList
-     */
-    public static void getvirusbyhostList2(ArrayList<Virus> selectedvirusList){
+   public static void getvirusbyhostList2(ArrayList<Virus> selectedvirusList){
        /**
      * Doet hetzelfde als bovenstaande methode alleen wordt hier gekeken naar de tweede hostid die gekozen is
      */
@@ -123,12 +108,7 @@ public class VirusLogica {
        }
        }}
    
-    /**
-     *
-     * @param selectedvirushost1List
-     * @param selectedvirushost2List
-     */
-    public static void sortAmounthost(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
+   public static void sortAmounthost(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
        /**
      * Deze methode wordt aangeroepen wanneer er gekozen is om te sorteren op het aantal hosts. Eerst worden de Lijsten leeg gemaakt
      * zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst. Het aantal keer dat iedere host voorkomt 
@@ -198,11 +178,6 @@ public class VirusLogica {
    });
        }
    
-    /**
-     *
-     * @param selectedvirushost1List
-     * @param selectedvirushost2List
-     */
     public static void sortHostid(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
         /**
      * Deze methode wordt aangeroepen wanneer er wordt gekozen om te sorteren op Hostid. Beide lijsten worden vervolgens gesorteerd.
@@ -210,12 +185,6 @@ public class VirusLogica {
         selectedvirushost1List.sort(Comparator.comparing(Virus::getHostID));
         selectedvirushost2List.sort(Comparator.comparing(Virus::getHostID));
     }
-
-    /**
-     *
-     * @param selectedvirushost1List
-     * @param selectedvirushost2List
-     */
     public static void sortClassification(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
         /**
      * Deze methode wordt aangeroepen wanneer er wordt gekozen om te sorteren op Classificatie. Beide lijsten worden vervolgens gesorteerd.
@@ -223,12 +192,6 @@ public class VirusLogica {
         selectedvirushost1List.sort(Comparator.comparing(Virus::getClassification));
         selectedvirushost2List.sort(Comparator.comparing(Virus::getClassification));
     }
-
-    /**
-     *
-     * @param selectedvirushost1List
-     * @param selectedvirushost2List
-     */
     public static void createSets(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
         /**
      * Deze methode krijgt vervolgens de lijsten met virussen die voldoen aan de filter eisen. Eerst worden de Sets leeg gemaakt

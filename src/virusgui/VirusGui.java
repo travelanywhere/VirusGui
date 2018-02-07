@@ -176,8 +176,9 @@ public class VirusGui extends JFrame implements ActionListener {
                 try {
                     infile = new BufferedReader(new FileReader(bestand));
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(VirusGui.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(VirusGui.class.getName()).log(Level.SEVERE, null, ex); 
                 }
+
                 try {
                     while ((line = infile.readLine()) != null) {
                         if (!line.startsWith("virus tax id")) {
