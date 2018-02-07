@@ -215,7 +215,6 @@ public class VirusLogica {
     overlapSet.retainAll(virus2Set);
             for (Integer virusid : virus1Set) {
                 VirusGui.virus1.append(virusid.toString()+"\n");
-                System.out.println(virus1Set.toString());
             }
             for (Integer virusid : virus2Set) {
                 VirusGui.virus2.append(virusid.toString()+"\n");
