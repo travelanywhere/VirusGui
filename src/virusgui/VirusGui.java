@@ -140,8 +140,6 @@ public class VirusGui extends JFrame implements ActionListener {
 
     }
 
-    private BufferedReader infile;
-
     @Override
     public void actionPerformed(ActionEvent event) {
         /**
@@ -160,38 +158,15 @@ public class VirusGui extends JFrame implements ActionListener {
         String bestand;
         FileChooser = new JFileChooser();
         if (event.getSource() == openButton) {
-            String line;
-            File selectFile;
-            int reply;
-            int i = 0;
             virusList = new ArrayList<>();
-            reply = FileChooser.showOpenDialog(this);
-            selectFile = FileChooser.getSelectedFile();
+            int reply = FileChooser.showOpenDialog(this);
+            File selectFile = FileChooser.getSelectedFile();
             if (reply == JFileChooser.APPROVE_OPTION) {
                 bestand = (selectFile.getAbsolutePath());
                 bestandNaam.setText(selectFile.getName());
-                try {
-                    infile = new BufferedReader(new FileReader(bestand));
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(VirusGui.class.getName()).log(Level.SEVERE, null, ex); 
-                }
-
-                try {
-                    while ((line = infile.readLine()) != null) {
-                        if (!line.startsWith("virus tax id")) {
-                            String[] splitline = line.split("\t", -1);
-                            Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
-                            virusList.add(virusObject);
-                            
-                        } 
-                    }
-                } catch (Exception exc) {
-                    System.out.println("Er is een fout opgetreden");
-                    System.out.println(exc.toString());
-                }
+            VirusLogica.makeObject(bestand);  
             }
             VirusLogica.makeComboboxList(virusList);
-
         }
         if (event.getSource() == submitButton) {
             virus1Textarea.setText("");
@@ -209,7 +184,6 @@ public class VirusGui extends JFrame implements ActionListener {
                 Virus.sorteer= 2;
             }
             VirusLogica.createSets(VirusLogica.selectedvirushost1List, VirusLogica.selectedvirushost2List);
-
         }
     }
 

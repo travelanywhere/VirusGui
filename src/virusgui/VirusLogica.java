@@ -179,20 +179,6 @@ public class VirusLogica {
    });
        }
    
-    public static void sortHostid(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
-        /**
-     * Deze methode wordt aangeroepen wanneer er wordt gekozen om te sorteren op Hostid. Beide lijsten worden vervolgens gesorteerd.
-     */
-        selectedvirushost1List.sort(Comparator.comparing(Virus::getHostID));
-        selectedvirushost2List.sort(Comparator.comparing(Virus::getHostID));
-    }
-    public static void sortClassification(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
-        /**
-     * Deze methode wordt aangeroepen wanneer er wordt gekozen om te sorteren op Classificatie. Beide lijsten worden vervolgens gesorteerd.
-     */
-        selectedvirushost1List.sort(Comparator.comparing(Virus::getClassification));
-        selectedvirushost2List.sort(Comparator.comparing(Virus::getClassification));
-    }
     public static void createSets(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
         /**
      * Deze methode krijgt vervolgens de lijsten met virussen die voldoen aan de filter eisen. Eerst worden de Sets leeg gemaakt
@@ -236,6 +222,24 @@ public class VirusLogica {
         virus1Set.clear();
         virus2Set.clear();
         overlapSet.clear();
+    }
+
+    static void makeObject(String bestand) {
+      try {
+                    BufferedReader infile = new BufferedReader(new FileReader(bestand));
+                    String line;
+                    while ((line = infile.readLine()) != null) {
+                        if (!line.startsWith("virus tax id")) {
+                            String[] splitline = line.split("\t", -1);
+                            Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
+                            virusList.add(virusObject);
+                            
+                        } 
+                    }
+                } catch (Exception exc) {
+                    System.out.println("Er is een fout opgetreden");
+                    System.out.println(exc.toString());
+                }
     }
         
     }
