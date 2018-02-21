@@ -5,7 +5,8 @@ package virusgui;
  * @version IDE 8.2 & Java 8
  * In dit bestand wordt het object virus gedefineerd en staat de bebehorende constructor en de getters en setters
  */
-public class Virus implements Comparable{
+
+public class Virus implements Comparable<Virus>{
     private int virusID;
     private String classification;
     private int hostID;
@@ -107,9 +108,23 @@ public class Virus implements Comparable{
     }
 
     @Override
-    public int compareTo(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //staat in de VirusLogica
+    public int compareTo(Virus o) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+        Virus vi = (Virus) o;
+        switch (sorteer){
+            case 0:
+                return vi.virusID - this.virusID;
+            case 1:
+                return vi.classification.compareTo(this.classification);
+            case 2:
+                System.out.println("jammer dan, werkt nog niet");
+            default:
+                return 0;      
     }
+        
+    }
+    
+public static int sorteer;
        
 }
     

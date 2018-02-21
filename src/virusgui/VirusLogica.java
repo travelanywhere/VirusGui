@@ -1,7 +1,16 @@
 package virusgui;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
+import static virusgui.VirusGui.virus1Textarea;
+import static virusgui.VirusGui.virusList;
 
 
 
@@ -18,7 +27,6 @@ public class VirusLogica {
  */
     static Set<String> classificationSet = new HashSet<String>();
     static ArrayList<String>classificationList = new ArrayList<>();
-    static Set<Integer> hostidSet = new HashSet<Integer>();
     static ArrayList<Integer>hostidList = new ArrayList<>();
     static Set<String>hostidNameSet = new HashSet<>();
     static ArrayList<String>hostidNameList = new ArrayList<>();
@@ -33,6 +41,7 @@ public class VirusLogica {
     static Set<Integer> overlapSet = new LinkedHashSet<Integer>();
     static ArrayList<Integer>virus1List = new ArrayList<>();
     static ArrayList<Integer>virus2List = new ArrayList<>();
+    static ArrayList<Integer>overlapList = new ArrayList<>();
     static String selectedHostidName;
     static String selectedHostidName2;
     static String[] splitselected;
@@ -40,7 +49,6 @@ public class VirusLogica {
     static Integer selectedHostid;
     static Integer selectedHostid2; 
 
-    
    public static void makeComboboxList(ArrayList<Virus> virusList){
      /**
      * Methode die na het inlezen van het bestand alle unieke Classificaties in een lijst zet door gebruik te maken van sets
@@ -48,25 +56,23 @@ public class VirusLogica {
      */
        for (Virus vi: virusList){
            classificationSet.add(vi.getClassification());
-           hostidSet.add(vi.getHostID());
            hostidNameSet.add(vi.getHostID()+ " ("+vi.getHostName()+")");
        }
        classificationList = new ArrayList(classificationSet);
        classificationList.add(" No filter");
-       hostidList = new ArrayList(hostidSet);
        hostidNameList = new ArrayList(hostidNameSet);
        VirusGui.classificationbox.setModel(new DefaultComboBoxModel(classificationList.toArray()));
        VirusGui.hostid1box.setModel(new DefaultComboBoxModel(hostidNameList.toArray()));
        VirusGui.hostid2box.setModel(new DefaultComboBoxModel(hostidNameList.toArray()));
    }
    
-   public static void getaskedvirusList(ArrayList<Virus> virusList){
+   public static ArrayList<Virus> getaskedvirusList(ArrayList<Virus> virusList){
     /**
      * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke classificatie gekozen is 
      * en een nieuwe lijst maakt met alle objecten die voldoen aan de filter keuze. Bij No filter wordt de complete lijst behouden.
-     * Maar eerst worden de Sets leeg gemaakt zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst.
+     * Maar eerst word de List leeg gemaakt zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst.
      */
-       selectedvirusList.clear();
+       //selectedvirusList.clear();
        String selectedClassification;
        selectedClassification = (String) VirusGui.classificationbox.getSelectedItem();
        for (Virus vi: virusList){
@@ -76,33 +82,28 @@ public class VirusLogica {
        if(" No filter".equals(selectedClassification)){
            selectedvirusList = virusList;
        }
-       }}
+       }
+       return selectedvirusList;
+   }
    
-   public static void getvirusbyhostList1(ArrayList<Virus> selectedvirusList){
+   public static void getvirusbyhostLists(ArrayList<Virus> selectedvirusList){
        /**
      * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke hostid gekozen is 
-     * en een nieuwe lijst maakt met alle objecten die voldoen aan de filter keuze. Maar eerst worden de Sets leeg gemaakt
+     * en een nieuwe lijst maakt met alle objecten die voldoen aan de filter keuze. Maar eerst worden de Lists leeg gemaakt
      * zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst.
      */
        selectedvirushost1List.clear();
+       selectedvirushost2List.clear();
        selectedHostidName = (String) VirusGui.hostid1box.getSelectedItem();
+       selectedHostidName2 = (String) VirusGui.hostid2box.getSelectedItem();
        splitselected = selectedHostidName.split("\\s+");
+       splitselected2 = selectedHostidName2.split("\\s+");
        selectedHostid = Integer.parseInt(splitselected[0]);
+       selectedHostid2 = Integer.parseInt(splitselected2[0]);
        for (Virus vi: selectedvirusList){
        if((vi.getHostID())==selectedHostid){
           selectedvirushost1List.add(vi);
        }
-       }}
-   
-   public static void getvirusbyhostList2(ArrayList<Virus> selectedvirusList){
-       /**
-     * Doet hetzelfde als bovenstaande methode alleen wordt hier gekeken naar de tweede hostid die gekozen is
-     */
-       selectedvirushost2List.clear();
-       selectedHostidName2 = (String) VirusGui.hostid2box.getSelectedItem();
-       splitselected2 = selectedHostidName2.split("\\s+");
-       selectedHostid2 = Integer.parseInt(splitselected2[0]);
-       for (Virus vi: selectedvirusList){
        if((vi.getHostID())==selectedHostid2){
           selectedvirushost2List.add(vi);
        }
@@ -199,29 +200,42 @@ public class VirusLogica {
      * aan de lijsten toegevoegd. Deze worden vervolgens omgezet tot een LinkedHashSet zodat de juiste volgerde behouden word en 
      * de overlap tussen de twee LinkedHashSets makkelijk bepaald kan worden. Vervolgens worden de tekstarea's van de GUI gevuld met de sets
      */
+        for(Virus vi: selectedvirushost1List){
+        //virus1List.add(vi.getVirusID());
+        virus1Set.add(vi.getVirusID());
+        }
+        for(Virus vi: selectedvirushost2List){
+        //virus2List.add(vi.getVirusID());
+        virus2Set.add(vi.getVirusID());
+        }
+    //virus1Set = new LinkedHashSet<>(virus1List);
+    //virus2Set = new LinkedHashSet<>(virus2List);
+    overlapSet.addAll(virus1Set);
+    overlapSet.retainAll(virus2Set);
+    virus1List.addAll(virus1Set);
+    virus2List.addAll(virus2Set);
+    overlapList.addAll(overlapSet);
+    Collections.sort(virus1List);
+    Collections.sort(virus2List);
+    Collections.sort(overlapList);
+    System.out.println(Virus.sorteer);
+    //System.out.println(virus2List);
+    //System.out.println(virus1List);
+            for (Integer virusid : virus1List) {
+                VirusGui.virus1Textarea.append(virusid.toString()+"\n");
+            }
+            for (Integer virusid : virus2List) {
+                VirusGui.virus2Textarea.append(virusid.toString()+"\n");
+            }
+            for (Integer virusid : overlapList) {
+                VirusGui.overlapTextarea.append(virusid.toString()+"\n");
+            }
+        virus1List.clear();
+        virus2List.clear();
+        overlapList.clear();
         virus1Set.clear();
         virus2Set.clear();
         overlapSet.clear();
-        for(Virus vi: selectedvirushost1List){
-        virus1List.add(vi.getVirusID());
-        }
-        for(Virus vi: selectedvirushost2List){
-        virus2List.add(vi.getVirusID());
-        }
-    virus1Set = new LinkedHashSet<>(virus1List);
-    virus2Set = new LinkedHashSet<>(virus2List);
-    overlapSet = new LinkedHashSet<>();
-    overlapSet.addAll(virus1Set);
-    overlapSet.retainAll(virus2Set);
-            for (Integer virusid : virus1Set) {
-                VirusGui.virus1.append(virusid.toString()+"\n");
-            }
-            for (Integer virusid : virus2Set) {
-                VirusGui.virus2.append(virusid.toString()+"\n");
-            }
-            for (Integer virusid : overlapSet) {
-                VirusGui.overlap.append(virusid.toString()+"\n");
-            }
     }
         
     }

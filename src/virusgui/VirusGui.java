@@ -33,16 +33,16 @@ public class VirusGui extends JFrame implements ActionListener {
     static JComboBox<Integer> hostid1box;
     static JComboBox hostid2box;
     JRadioButton rbID;
-    JRadioButton rbHost;
+    JRadioButton rbHostamount;
     JRadioButton rbClass;
     JLabel sortLabel;
-    static JTextArea virus1;
-    static JTextArea virus2;
+    static JTextArea virus1Textarea;
+    static JTextArea virus2Textarea;
     JLabel virus1Label;
     JLabel virus2Label;
     JScrollPane scrollPane;
     JScrollPane scrollPane2;
-    static JTextArea overlap;
+    static JTextArea overlapTextarea;
     JLabel overlapLabel;
     JScrollPane scrollPane3;
     JButton submitButton;
@@ -61,9 +61,6 @@ public class VirusGui extends JFrame implements ActionListener {
         frame.show();
     }
 
-    /**
-     *
-     */
     public void createGUI() {
         /**
          * In deze methoden wordt de Gui gemaakt. De JComboBoxen bevatten nog
@@ -106,34 +103,34 @@ public class VirusGui extends JFrame implements ActionListener {
         window.add(sortLabel);
         rbID = new JRadioButton("ID");
         rbID.setSelected(true);
-        rbHost = new JRadioButton("Classification");
+        rbHostamount = new JRadioButton("Classification");
         rbClass = new JRadioButton("amount Hosts                                                                   ");
 
         ButtonGroup sortgroup = new ButtonGroup();
         sortgroup.add(rbID);
-        sortgroup.add(rbHost);
+        sortgroup.add(rbHostamount);
         sortgroup.add(rbClass);
         window.add(rbID);
-        window.add(rbHost);
+        window.add(rbHostamount);
         window.add(rbClass);
 
         virus1Label = new JLabel("                   VirusList 1:");
         virus2Label = new JLabel("VirusList 2:");
-        virus1 = new JTextArea(15, 20);
-        virus2 = new JTextArea(15, 20);
-        scrollPane = new JScrollPane(virus1,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        virus1Textarea = new JTextArea(15, 20);
+        virus2Textarea = new JTextArea(15, 20);
+        scrollPane = new JScrollPane(virus1Textarea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
-        virus1.setEditable(false);
-        scrollPane2 = new JScrollPane(virus2,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        virus2.setEditable(false);
+        virus1Textarea.setEditable(false);
+        scrollPane2 = new JScrollPane(virus2Textarea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        virus2Textarea.setEditable(false);
         window.add(virus1Label);
         window.add(scrollPane);
         window.add(virus2Label);
         window.add(scrollPane2);
 
         overlapLabel = new JLabel("                     overlap viruses from hosts");
-        overlap = new JTextArea(15, 20);
-        scrollPane3 = new JScrollPane(overlap,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);;
+        overlapTextarea = new JTextArea(15, 20);
+        scrollPane3 = new JScrollPane(overlapTextarea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);;
         window.add(overlapLabel);
         window.add(scrollPane3);
 
@@ -185,7 +182,8 @@ public class VirusGui extends JFrame implements ActionListener {
                             String[] splitline = line.split("\t", -1);
                             Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
                             virusList.add(virusObject);
-                        }
+                            
+                        } 
                     }
                 } catch (Exception exc) {
                     System.out.println("Er is een fout opgetreden");
@@ -196,20 +194,19 @@ public class VirusGui extends JFrame implements ActionListener {
 
         }
         if (event.getSource() == submitButton) {
+            virus1Textarea.setText("");
+            virus2Textarea.setText("");
+            overlapTextarea.setText("");
             VirusLogica.getaskedvirusList(virusList);
-            VirusLogica.getvirusbyhostList1(VirusLogica.selectedvirusList);
-            VirusLogica.getvirusbyhostList2(VirusLogica.selectedvirusList);
-            virus1.setText(null);
-            virus2.setText(null);
-            overlap.setText(null);
+            VirusLogica.getvirusbyhostLists(VirusLogica.selectedvirusList);
             if (rbID.isSelected()) {
-                VirusLogica.sortHostid(VirusLogica.selectedvirushost1List, VirusLogica.selectedvirushost2List);
+                Virus.sorteer = 0;
             }
-            if (rbHost.isSelected()) {
-                VirusLogica.sortAmounthost(VirusLogica.selectedvirushost1List, VirusLogica.selectedvirushost2List);
+            if (rbHostamount.isSelected()) {
+                Virus.sorteer= 1;
             }
             if (rbClass.isSelected()) {
-                VirusLogica.sortClassification(VirusLogica.selectedvirushost1List, VirusLogica.selectedvirushost2List);
+                Virus.sorteer= 2;
             }
             VirusLogica.createSets(VirusLogica.selectedvirushost1List, VirusLogica.selectedvirushost2List);
 
