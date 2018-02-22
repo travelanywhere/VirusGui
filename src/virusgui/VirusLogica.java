@@ -73,6 +73,25 @@ public class VirusLogica {
        VirusGui.hostid2box.setModel(new DefaultComboBoxModel(hostidNameList.toArray()));
    }
    
+   public static void setAmounthost(ArrayList<Virus> virusList){
+       /**
+     * Deze methode wordt aangeroepen om in de virusclass het amount of host te vullen. Met behulp van een hashmap wordt bepaald
+     * hoe vaak elke host voorkomt in de list met virus objecten. De frequentie wordt als value toegevoegd aan de hasmap.
+     * wanneer de key al in de hashmap staat wordt er +1 gedaan bij de value.
+     */
+       HashMap<Integer,Integer> amounthostMap = new HashMap<>();
+        for(int i=0; i<virusList.size(); i++){
+            if(amounthostMap.containsKey(virusList.get(i).getHostID())){
+                amounthostMap.put(virusList.get(i).getHostID(), +1);
+            } else {
+                amounthostMap.put(virusList.get(i).getHostID(), 1);
+            }}
+        for(Virus vi: virusList){
+        if(amounthostMap.containsKey(vi.getHostID())){
+        vi.setNumberHost(amounthostMap.get(vi.getHostID()));
+        }}
+       }
+   
    public static ArrayList<Virus> getaskedvirusList(ArrayList<Virus> virusList){
     /**
      * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke classificatie gekozen is 
@@ -115,25 +134,6 @@ public class VirusLogica {
           selectedvirushost2List.add(vi);
        }
        }}
-   
-   public static void setAmounthost(ArrayList<Virus> virusList){
-       /**
-     * Deze methode wordt aangeroepen wanneer er gekozen is om te sorteren op het aantal hosts. Eerst worden de Lijsten leeg gemaakt
-     * zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst. Het aantal keer dat iedere host voorkomt 
-     * word geteld en de frequentie wordt steeds met elkaar vergeleken om ze te sorteren. Dit wordt voor beide lijsten gedaan
-     */
-       HashMap<Integer,Integer> amounthostMap = new HashMap<Integer,Integer>();
-        for(int i=0; i<virusList.size(); i++){
-            if(amounthostMap.containsKey(virusList.get(i).getHostID())){
-                amounthostMap.put(virusList.get(i).getHostID(), +1);
-            } else {
-                amounthostMap.put(virusList.get(i).getHostID(), 1);
-            }}
-        for(Virus vi: virusList){
-        if(amounthostMap.containsKey(vi.getHostID())){
-        vi.setNumberHost(amounthostMap.get(vi.getHostID()));
-        }}
-       }
    
     public static void createSets(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
         /**
