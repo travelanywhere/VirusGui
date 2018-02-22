@@ -172,6 +172,7 @@ public class VirusGui extends JFrame implements ActionListener {
             virus1Textarea.setText("");
             virus2Textarea.setText("");
             overlapTextarea.setText("");
+            VirusLogica.setAmounthost(virusList);
             VirusLogica.getaskedvirusList(virusList);
             VirusLogica.getvirusbyhostLists(VirusLogica.selectedvirusList);
             if (rbID.isSelected()) {

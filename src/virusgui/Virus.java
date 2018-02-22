@@ -11,7 +11,7 @@ public class Virus implements Comparable<Virus>{
     private String classification;
     private int hostID;
     private String hostName;
-    private Integer numberHost;
+    private Integer amountHost;
 
     /**
      *
@@ -96,7 +96,7 @@ public class Virus implements Comparable<Virus>{
      * @return
      */
     public Integer getNumberHost() {
-        return numberHost;
+        return amountHost;
     }
 
     /**
@@ -104,12 +104,12 @@ public class Virus implements Comparable<Virus>{
      * @param numberHost
      */
     public void setNumberHost(Integer numberHost) {
-        this.numberHost = numberHost;
+        this.amountHost = numberHost;
     }
 
     @Override
     public int compareTo(Virus o) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        //Fini heeft geholpen bij het opzetten van deze methoden om de resultaten te sorteren.
         Virus vi = (Virus) o;
         switch (sorteer){
             case 0:
@@ -117,11 +117,10 @@ public class Virus implements Comparable<Virus>{
             case 1:
                 return vi.classification.compareTo(this.classification);
             case 2:
-                System.out.println("jammer dan, werkt nog niet");
+                return vi.amountHost - this.amountHost;
             default:
                 return 0;      
-    }
-        
+    }      
     }
     
 public static int sorteer;

@@ -1,19 +1,11 @@
 package virusgui;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFileChooser;
-import static virusgui.VirusGui.virus1Textarea;
 import static virusgui.VirusGui.virusList;
-
-
-
 
 /**
  * @author Nicky van Bergen, made in Austria & the Netherlands
@@ -30,9 +22,6 @@ public class VirusLogica {
     static ArrayList<Integer>hostidList = new ArrayList<>();
     static Set<String>hostidNameSet = new HashSet<>();
     static ArrayList<String>hostidNameList = new ArrayList<>();
-    static ArrayList<Integer>hostList = new ArrayList<>();
-    static ArrayList<Integer>hostList2 = new ArrayList<>();
-    static ArrayList<Integer>amountHostList = new ArrayList<>();
     static ArrayList<Virus> selectedvirusList = new ArrayList<>();
     static ArrayList<Virus> selectedvirushost1List = new ArrayList<>();
     static ArrayList<Virus> selectedvirushost2List = new ArrayList<>();
@@ -48,6 +37,24 @@ public class VirusLogica {
     static String[] splitselected2;
     static Integer selectedHostid;
     static Integer selectedHostid2; 
+    
+    static void makeObject(String bestand) {
+      try {
+                    BufferedReader infile = new BufferedReader(new FileReader(bestand));
+                    String line;
+                    while ((line = infile.readLine()) != null) {
+                        if (!line.startsWith("virus tax id")) {
+                            String[] splitline = line.split("\t", -1);
+                            Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
+                            virusList.add(virusObject);
+                            
+                        } 
+                    }
+                } catch (IOException | NumberFormatException exc) {
+                    System.out.println("Er is een fout opgetreden");
+                    System.out.println(exc.toString());
+                }
+    }
 
    public static void makeComboboxList(ArrayList<Virus> virusList){
      /**
@@ -109,74 +116,23 @@ public class VirusLogica {
        }
        }}
    
-   public static void sortAmounthost(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
+   public static void setAmounthost(ArrayList<Virus> virusList){
        /**
      * Deze methode wordt aangeroepen wanneer er gekozen is om te sorteren op het aantal hosts. Eerst worden de Lijsten leeg gemaakt
      * zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst. Het aantal keer dat iedere host voorkomt 
      * word geteld en de frequentie wordt steeds met elkaar vergeleken om ze te sorteren. Dit wordt voor beide lijsten gedaan
      */
-       hostList.clear();
-       Collections.sort(selectedvirushost1List,new Comparator<Virus>(){
-       @Override
-       public int compare(final Virus object1, Virus object2){
-       for (Virus vi: selectedvirushost1List){
-       hostList.add(vi.getHostID());
-       }
-       Integer id1 = object1.getHostID();
-       Integer id2 = object2.getHostID();
-       Integer frequencie1 = Collections.frequency(hostList, id1);
-       Integer frequencie2 = Collections.frequency(hostList, id2);
-       object1.setNumberHost(frequencie1);
-       object2.setNumberHost(frequencie2);
-       int vergelijk = object1.getNumberHost().compareTo(object2.getNumberHost());
-       if(vergelijk==0){
-       object1.setNumberHost(0);
-       object2.setNumberHost(0);
-       }
-       if(vergelijk<0){
-       object1.setNumberHost(-1);
-       object2.setNumberHost(1);
-       }
-       if(vergelijk>0){
-       object1.setNumberHost(1);
-       object2.setNumberHost(-1);
-       }
-       else return 0;
-       return object1.getNumberHost().compareTo(object2.getNumberHost());
-       }
-       
-   });
-       hostList2.clear();
-       Collections.sort(selectedvirushost1List,new Comparator<Virus>(){
-       @Override
-       public int compare(final Virus object1, Virus object2){
-       for (Virus vi: selectedvirushost2List){
-       hostList2.add(vi.getHostID());
-       }
-       Integer id1 = object1.getHostID();
-       Integer id2 = object2.getHostID();
-       Integer frequencie1 = Collections.frequency(hostList2, id1);
-       Integer frequencie2 = Collections.frequency(hostList2, id2);
-       object1.setNumberHost(frequencie1);
-       object2.setNumberHost(frequencie2);
-       int vergelijk = object1.getNumberHost().compareTo(object2.getNumberHost());
-       if(vergelijk==0){
-       object1.setNumberHost(0);
-       object2.setNumberHost(0);
-       }
-       if(vergelijk<0){
-       object1.setNumberHost(-1);
-       object2.setNumberHost(1);
-       }
-       if(vergelijk>0){
-       object1.setNumberHost(1);
-       object2.setNumberHost(-1);
-       }
-       else return 0;
-       return object1.getNumberHost().compareTo(object2.getNumberHost());
-       }
-       
-   });
+       HashMap<Integer,Integer> amounthostMap = new HashMap<Integer,Integer>();
+        for(int i=0; i<virusList.size(); i++){
+            if(amounthostMap.containsKey(virusList.get(i).getHostID())){
+                amounthostMap.put(virusList.get(i).getHostID(), +1);
+            } else {
+                amounthostMap.put(virusList.get(i).getHostID(), 1);
+            }}
+        for(Virus vi: virusList){
+        if(amounthostMap.containsKey(vi.getHostID())){
+        vi.setNumberHost(amounthostMap.get(vi.getHostID()));
+        }}
        }
    
     public static void createSets(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
@@ -204,9 +160,6 @@ public class VirusLogica {
     Collections.sort(virus1List);
     Collections.sort(virus2List);
     Collections.sort(overlapList);
-    System.out.println(Virus.sorteer);
-    //System.out.println(virus2List);
-    //System.out.println(virus1List);
             for (Integer virusid : virus1List) {
                 VirusGui.virus1Textarea.append(virusid.toString()+"\n");
             }
@@ -224,23 +177,7 @@ public class VirusLogica {
         overlapSet.clear();
     }
 
-    static void makeObject(String bestand) {
-      try {
-                    BufferedReader infile = new BufferedReader(new FileReader(bestand));
-                    String line;
-                    while ((line = infile.readLine()) != null) {
-                        if (!line.startsWith("virus tax id")) {
-                            String[] splitline = line.split("\t", -1);
-                            Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
-                            virusList.add(virusObject);
-                            
-                        } 
-                    }
-                } catch (Exception exc) {
-                    System.out.println("Er is een fout opgetreden");
-                    System.out.println(exc.toString());
-                }
-    }
+
         
     }
    
