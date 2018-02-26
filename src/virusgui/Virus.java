@@ -11,7 +11,7 @@ public class Virus implements Comparable<Virus>{
     private String classification;
     private int hostID;
     private String hostName;
-    private Integer amountHost;
+    private int amountHost;
 
     /**
      *

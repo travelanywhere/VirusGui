@@ -22,6 +22,7 @@ public class VirusGui extends JFrame implements ActionListener {
     /**
      * Declaratie van gebruikte elementen voor de GUI
      */
+
     JButton openButton;
     JFileChooser FileChooser;
     JLabel bestandLabel;

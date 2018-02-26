@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.DefaultComboBoxModel;
-import static virusgui.VirusGui.virusList;
 
 /**
  * @author Nicky van Bergen, made in Austria & the Netherlands
@@ -19,10 +18,11 @@ public class VirusLogica {
  */
     static Set<String> classificationSet = new HashSet<String>();
     static ArrayList<String>classificationList = new ArrayList<>();
-    static ArrayList<Integer>hostidList = new ArrayList<>();
     static Set<String>hostidNameSet = new HashSet<>();
     static ArrayList<String>hostidNameList = new ArrayList<>();
     static ArrayList<Virus> selectedvirusList = new ArrayList<>();
+    static HashSet<Virus> selectedvirushost1Set = new HashSet<>();
+    static HashSet<Virus> selectedvirushost2Set = new HashSet<>();
     static ArrayList<Virus> selectedvirushost1List = new ArrayList<>();
     static ArrayList<Virus> selectedvirushost2List = new ArrayList<>();
     static Set<Integer> virus1Set = new LinkedHashSet<Integer>();
@@ -31,6 +31,7 @@ public class VirusLogica {
     static ArrayList<Integer>virus1List = new ArrayList<>();
     static ArrayList<Integer>virus2List = new ArrayList<>();
     static ArrayList<Integer>overlapList = new ArrayList<>();
+    static HashMap<Integer,HashSet<Virus>> hostvirusMap = new HashMap<>();
     static String selectedHostidName;
     static String selectedHostidName2;
     static String[] splitselected;
@@ -46,8 +47,15 @@ public class VirusLogica {
                         if (!line.startsWith("virus tax id")) {
                             String[] splitline = line.split("\t", -1);
                             Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
-                            virusList.add(virusObject);
-                            
+                            VirusGui.virusList.add(virusObject);
+                            if(hostvirusMap.containsKey(virusObject.getHostID())){
+                                hostvirusMap.get(virusObject.getHostID()).add(virusObject);
+                            }               
+                            else {
+                                HashSet<Virus> tempHashSet = new HashSet<>();
+                                tempHashSet.add(virusObject);
+                                hostvirusMap.put(virusObject.getHostID(), tempHashSet);
+                            } 
                         } 
                     }
                 } catch (IOException | NumberFormatException exc) {
@@ -82,7 +90,7 @@ public class VirusLogica {
        HashMap<Integer,Integer> amounthostMap = new HashMap<>();
         for(int i=0; i<virusList.size(); i++){
             if(amounthostMap.containsKey(virusList.get(i).getHostID())){
-                amounthostMap.put(virusList.get(i).getHostID(), +1);
+                amounthostMap.put(virusList.get(i).getHostID(), amounthostMap.get(virusList.get(i).getHostID())+1);
             } else {
                 amounthostMap.put(virusList.get(i).getHostID(), 1);
             }}
@@ -118,22 +126,26 @@ public class VirusLogica {
      * en een nieuwe lijst maakt met alle objecten die voldoen aan de filter keuze. Maar eerst worden de Lists leeg gemaakt
      * zodat evt elementen van een vorige opdracht worden verwijdert uit de Lijst.
      */
-       selectedvirushost1List.clear();
-       selectedvirushost2List.clear();
+       selectedvirushost1Set.clear();
+       selectedvirushost2Set.clear();
        selectedHostidName = (String) VirusGui.hostid1box.getSelectedItem();
        selectedHostidName2 = (String) VirusGui.hostid2box.getSelectedItem();
        splitselected = selectedHostidName.split("\\s+");
        splitselected2 = selectedHostidName2.split("\\s+");
        selectedHostid = Integer.parseInt(splitselected[0]);
        selectedHostid2 = Integer.parseInt(splitselected2[0]);
-       for (Virus vi: selectedvirusList){
-       if((vi.getHostID())==selectedHostid){
-          selectedvirushost1List.add(vi);
+       selectedvirushost1Set = hostvirusMap.get(selectedHostid);
+       selectedvirushost1List = new ArrayList<>(selectedvirushost1Set);
+       selectedvirushost2Set = hostvirusMap.get(selectedHostid2);
+       selectedvirushost2List = new ArrayList<>(selectedvirushost2Set);
+       //for (Virus vi: selectedvirusList){
+//       if((vi.getHostID())==selectedHostid){
+//          selectedvirushost1Set.add(vi);
+//       }
+//       if((vi.getHostID())==selectedHostid2){
+//          selectedvirushost2Set.add(vi);
+       
        }
-       if((vi.getHostID())==selectedHostid2){
-          selectedvirushost2List.add(vi);
-       }
-       }}
    
     public static void createSets(ArrayList<Virus> selectedvirushost1List,ArrayList<Virus> selectedvirushost2List){
         /**
@@ -143,15 +155,11 @@ public class VirusLogica {
      * de overlap tussen de twee LinkedHashSets makkelijk bepaald kan worden. Vervolgens worden de tekstarea's van de GUI gevuld met de sets
      */
         for(Virus vi: selectedvirushost1List){
-        //virus1List.add(vi.getVirusID());
         virus1Set.add(vi.getVirusID());
         }
         for(Virus vi: selectedvirushost2List){
-        //virus2List.add(vi.getVirusID());
         virus2Set.add(vi.getVirusID());
         }
-    //virus1Set = new LinkedHashSet<>(virus1List);
-    //virus2Set = new LinkedHashSet<>(virus2List);
     overlapSet.addAll(virus1Set);
     overlapSet.retainAll(virus2Set);
     virus1List.addAll(virus1Set);
