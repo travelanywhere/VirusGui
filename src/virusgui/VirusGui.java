@@ -146,14 +146,12 @@ public class VirusGui extends JFrame implements ActionListener {
         /**
          * In de actionPerformed wordt gekeken welke acties er door de gebruiker
          * worden uitgevoerd Wanneer de gebruiker op de openButton klikt kan er
-         * met de filechooser een bestand worden geopend en ingelezen worden
-         * Vervolgens wordt alles wat ingelezen is meteen in objecten gezet met
-         * behulp van de constructor. Ook wordt de methode makeComboList
+         * met de filechooser een bestand gekozen. Ook wordt de methode makeComboList
          * aangeroepen om de juiste String met opties in de comboboxen te
          * zetten. Wanneer submit wordt aangeklikt methodes getaskedvirusList,
          * getvirusbyhostList1 & getvirusbyhostList2 aangeroepen. Vervolgens
-         * wordt gecheckt welke sorteering is gekozen en wordt de bijbehorende
-         * methode aangeroepen. De sets die hierbij gemaakt worden worden
+         * wordt gecheckt welke sorteering is gekozen en wordt de compare to aangeroepen.
+         * De sets die hierbij gemaakt worden worden
          * vervolgens in de textArea's weergegeven
          */
         String bestand;
@@ -174,8 +172,8 @@ public class VirusGui extends JFrame implements ActionListener {
             virus2Textarea.setText("");
             overlapTextarea.setText("");
             VirusLogica.setAmounthost(virusList);
-            VirusLogica.getaskedvirusList(virusList);
-            VirusLogica.getvirusbyhostLists(VirusLogica.selectedvirusList);
+            VirusLogica.getvirusbyhostSets(VirusLogica.hostvirusMap);
+            VirusLogica.getaskedvirusLists(VirusLogica.virusbyhostSet1, VirusLogica.virusbyhostSet2);
             if (rbID.isSelected()) {
                 Virus.sorteer = 0;
             }
@@ -185,7 +183,7 @@ public class VirusGui extends JFrame implements ActionListener {
             if (rbClass.isSelected()) {
                 Virus.sorteer= 2;
             }
-            VirusLogica.createSets(VirusLogica.selectedvirushost1List, VirusLogica.selectedvirushost2List);
+            VirusLogica.createSets(VirusLogica.virus1Set, VirusLogica.virus2Set);
         }
     }
 
