@@ -102,8 +102,6 @@ public class VirusLogica {
      * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke hostid gekozen is. 
      * Via de HashMap wordt de gekozen hostid ophaalt en de bijbehorende virus objecten in een HashSet zet.
      */
-       virusbyhostSet1.clear();
-       virusbyhostSet2.clear();
        String selectedHostidName = (String) VirusGui.hostid1box.getSelectedItem();
        String selectedHostidName2 = (String) VirusGui.hostid2box.getSelectedItem();
        String[] splitselected = selectedHostidName.split("\\s+");
@@ -111,7 +109,7 @@ public class VirusLogica {
        Integer selectedHostid = Integer.parseInt(splitselected[0]);
        Integer selectedHostid2 = Integer.parseInt(splitselected2[0]);
        virusbyhostSet1 = hostvirusMap.get(selectedHostid);
-       virusbyhostSet2 = hostvirusMap.get(selectedHostid2);    
+       virusbyhostSet2 = hostvirusMap.get(selectedHostid2);
        }
    
    public static void getaskedvirusSets(HashSet<Virus> selectedvirushost1Set,HashSet<Virus> selectedvirushost2Set ){
@@ -161,10 +159,7 @@ public class VirusLogica {
         virus1Set.clear();
         virus2Set.clear();
         overlapSet.clear();
-    }
-
-
-        
+    }  
     }
    
 
