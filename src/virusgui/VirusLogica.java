@@ -9,11 +9,12 @@ import javax.swing.DefaultComboBoxModel;
 /**
  * @author Nicky van Bergen, made in Austria & the Netherlands
  * @version IDE 8.2 & Java 8
- * Justin heeft geholpen met het sorteren van de data, regex voor het vervangen van een lege HostID en het fixen van de scrollbar.
+ * In dit bestand staan alle methodes die worden aangeroepen in de action Performed.
+ * Justin heeft geholpen bij de regex voor het vervangen van een lege HostID en het fixen van de scrollbar.
  */
 public class VirusLogica {
  /**
- * declaratie van gebruikte ArrayLists, HashSets & Hashmaps
+ * declaratie & initalisatie van gebruikte ArrayLists, HashSets & Hashmaps
  * deze zijn static zodat ze in de andere classes gebruikt kunnen worden
  */
     static HashMap<Integer,HashSet<Virus>> hostvirusMap = new HashMap<>();
@@ -25,20 +26,14 @@ public class VirusLogica {
     static HashSet<Virus> virusbyhostSet2 = new HashSet<>();
     static ArrayList<Virus> selectedvirushost1List = new ArrayList<>();
     static ArrayList<Virus> selectedvirushost2List = new ArrayList<>();
-    static Set<Virus> virus1Set = new HashSet<Virus>();
-    static Set<Virus> virus2Set = new HashSet<Virus>();
-    static Set<Virus> overlapSet = new HashSet<Virus>();
-    static ArrayList<Virus>virus1List = new ArrayList<>();
-    static ArrayList<Virus>virus2List = new ArrayList<>();
-    static ArrayList<Virus>overlapList = new ArrayList<>();
-    static String selectedHostidName;
-    static String selectedHostidName2;
-    static String[] splitselected;
-    static String[] splitselected2;
-    static Integer selectedHostid;
-    static Integer selectedHostid2; 
+    static Set<Integer> virus1Set = new HashSet<Integer>();
+    static Set<Integer> virus2Set = new HashSet<Integer>();
+    static Set<Integer> overlapSet = new HashSet<Integer>();
+    static ArrayList<Integer>virus1List = new ArrayList<>();
+    static ArrayList<Integer>virus2List = new ArrayList<>();
+    static ArrayList<Integer>overlapList = new ArrayList<>();
     
-    static void makeObject(String bestand) {
+    static void readFile(String bestand) {
         /**
      * In deze methode wordt het gekozen bestand ingelezen en wordt voor iedere regel van het bestand een object aangemaakt
      * via de constructor van de Virus Class. Hiernaast wordt er meteen een hasmap gemaakt met de HostID als Key en bijbehorende
@@ -53,13 +48,11 @@ public class VirusLogica {
                             Virus virusObject = new Virus(Integer.parseInt(splitline[0]), splitline[2].split(";")[1], Integer.parseInt(splitline[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), splitline[8]);
                             VirusGui.virusList.add(virusObject);
                             if(hostvirusMap.containsKey(virusObject.getHostID())){
-                                hostvirusMap.get(virusObject.getHostID()).add(virusObject);
-                            }               
+                                hostvirusMap.get(virusObject.getHostID()).add(virusObject);}               
                             else {
                                 HashSet<Virus> tempHashSet = new HashSet<>();
                                 tempHashSet.add(virusObject);
-                                hostvirusMap.put(virusObject.getHostID(), tempHashSet);
-                            } 
+                                hostvirusMap.put(virusObject.getHostID(), tempHashSet);} 
                         } 
                     }
                 } catch (IOException | NumberFormatException exc) {
@@ -99,54 +92,54 @@ public class VirusLogica {
                 amounthostMap.put(virusList.get(i).getHostID(), 1);
             }}
         for(Virus vi: virusList){
-        if(amounthostMap.containsKey(vi.getHostID())){
-        vi.setNumberHost(amounthostMap.get(vi.getHostID()));
-        }}
-       }
+            if(amounthostMap.containsKey(vi.getHostID())){
+                vi.setAmountHost(amounthostMap.get(vi.getHostID()));
+            }}
+        }
    
    public static void getvirusbyhostSets(HashMap<Integer,HashSet<Virus>> hostvirusMap){
        /**
-     * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke hostid gekozen is 
-     * en de via een HashMap de gekozen hostid ophaalt en de bijbehorende virus objecten in een HashSet zet.
+     * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke hostid gekozen is. 
+     * Via de HashMap wordt de gekozen hostid ophaalt en de bijbehorende virus objecten in een HashSet zet.
      */
        virusbyhostSet1.clear();
        virusbyhostSet2.clear();
-       selectedHostidName = (String) VirusGui.hostid1box.getSelectedItem();
-       selectedHostidName2 = (String) VirusGui.hostid2box.getSelectedItem();
-       splitselected = selectedHostidName.split("\\s+");
-       splitselected2 = selectedHostidName2.split("\\s+");
-       selectedHostid = Integer.parseInt(splitselected[0]);
-       selectedHostid2 = Integer.parseInt(splitselected2[0]);
+       String selectedHostidName = (String) VirusGui.hostid1box.getSelectedItem();
+       String selectedHostidName2 = (String) VirusGui.hostid2box.getSelectedItem();
+       String[] splitselected = selectedHostidName.split("\\s+");
+       String[] splitselected2 = selectedHostidName2.split("\\s+");
+       Integer selectedHostid = Integer.parseInt(splitselected[0]);
+       Integer selectedHostid2 = Integer.parseInt(splitselected2[0]);
        virusbyhostSet1 = hostvirusMap.get(selectedHostid);
        virusbyhostSet2 = hostvirusMap.get(selectedHostid2);    
        }
    
-   public static void getaskedvirusLists(HashSet<Virus> selectedvirushost1Set,HashSet<Virus> selectedvirushost2Set ){
+   public static void getaskedvirusSets(HashSet<Virus> selectedvirushost1Set,HashSet<Virus> selectedvirushost2Set ){
     /**
-     * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke classificatie gekozen is 
-     * en de set van getvirusbyhostList krijgt en deze virus objecten bekijkt of ze voldoen aan de classificatie.
+     * Methode die na het vullen van de comboboxen en het drukken op submit checkt welke classificatie gekozen is. 
+     * Deze methode krijgt de set van getvirusbyhostSets en bekijkt welke virus objecten voldoen aan 
+     * de classificatie en zet deze in een nieuwe set.
      */
        String selectedClassification;
        selectedClassification = (String) VirusGui.classificationbox.getSelectedItem();
-       
        for (Virus vi: selectedvirushost1Set){
         if(selectedClassification.equals(vi.getClassification())){
-            virus1Set.add(vi);}
+            virus1Set.add(vi.getVirusID());}
         if(" No filter".equals(selectedClassification)){
-           virus1Set.addAll(selectedvirushost1Set);
+           virus1Set.add(vi.getVirusID());
        }}
        for (Virus vi: selectedvirushost2Set){
         if(selectedClassification.equals(vi.getClassification())){
-          virus2Set.add(vi);}
+          virus2Set.add(vi.getVirusID());}
         if(" No filter".equals(selectedClassification)){
-           virus2Set.addAll(selectedvirushost2Set);
+           virus2Set.add(vi.getVirusID());
        }}
    }
    
-    public static void createSets(Set<Virus> virus1Set, Set<Virus> virus2Set){
+    public static void compareSets(Set<Integer> virus1Set, Set<Integer> virus2Set){
         /**
-     * Deze methode krijgt vervolgens de Sets met virussen objecten die voldoen aan de filter eisen. vergelijkt de sets
-     * zet deze in een lijst en sorteert ze. Vervolgens worden deze lijsten in de textarea's gezet.
+     * Deze methode krijgt vervolgens de Sets met virusID's die voldoen aan de filter eisen. vergelijkt de sets,
+     * zet deze in een List en sorteert ze. Vervolgens worden de HostID's één voor één in de textarea's gezet.
      */
     overlapSet.addAll(virus1Set);
     overlapSet.retainAll(virus2Set);
@@ -156,18 +149,12 @@ public class VirusLogica {
     Collections.sort(virus1List);
     Collections.sort(virus2List);
     Collections.sort(overlapList);
-            for (Virus vi : virus1List) {
-                Integer virusid = vi.getVirusID();
-                VirusGui.virus1Textarea.append(virusid.toString()+"\n");
-            }
-            for (Virus vi : virus2List) {
-                Integer virusid = vi.getVirusID();
-                VirusGui.virus2Textarea.append(virusid.toString()+"\n");
-            }
-            for (Virus vi : overlapList) {
-                Integer virusid = vi.getVirusID();
-                VirusGui.virus2Textarea.append(virusid.toString()+"\n");
-            }
+            for (Integer vi : virus1List) {
+                VirusGui.virus1Textarea.append(vi.toString()+"\n");}
+            for (Integer vi : virus2List) {
+                VirusGui.virus2Textarea.append(vi.toString()+"\n");}
+            for (Integer vi : overlapList) {
+                VirusGui.overlapTextarea.append(vi.toString()+"\n");}
         virus1List.clear();
         virus2List.clear();
         overlapList.clear();

@@ -3,19 +3,15 @@ package virusgui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 /**
  * @author Nicky van Bergen, made in Austria & the Netherlands
  * @version IDE 8.2 & Java 8
+ * In dit bestand wordt de GUI gemaakt en de bijbehorende actionPerformed
  */
 public class VirusGui extends JFrame implements ActionListener {
 
@@ -146,13 +142,10 @@ public class VirusGui extends JFrame implements ActionListener {
         /**
          * In de actionPerformed wordt gekeken welke acties er door de gebruiker
          * worden uitgevoerd Wanneer de gebruiker op de openButton klikt kan er
-         * met de filechooser een bestand gekozen. Ook wordt de methode makeComboList
-         * aangeroepen om de juiste String met opties in de comboboxen te
-         * zetten. Wanneer submit wordt aangeklikt methodes getaskedvirusList,
-         * getvirusbyhostList1 & getvirusbyhostList2 aangeroepen. Vervolgens
-         * wordt gecheckt welke sorteering is gekozen en wordt de compare to aangeroepen.
-         * De sets die hierbij gemaakt worden worden
-         * vervolgens in de textArea's weergegeven
+         * met de filechooser een bestand gekozen. Ook wordt de methode readFile, setAmountHost en makeComboList
+         * aangeroepen. Wanneer submit wordt aangeklikt methodes getvirusbyhosSets,
+         * getaskedvirusSets en compareSets aangeroepen. Vervolgens
+         * wordt gecheckt welke sorteering is gekozen en wordt de compare to aangeroepen met de int sort.
          */
         String bestand;
         FileChooser = new JFileChooser();
@@ -163,27 +156,27 @@ public class VirusGui extends JFrame implements ActionListener {
             if (reply == JFileChooser.APPROVE_OPTION) {
                 bestand = (selectFile.getAbsolutePath());
                 bestandNaam.setText(selectFile.getName());
-            VirusLogica.makeObject(bestand);  
+            VirusLogica.readFile(bestand);  
             }
             VirusLogica.makeComboboxList(virusList);
+            VirusLogica.setAmounthost(virusList);
         }
         if (event.getSource() == submitButton) {
+            VirusLogica.getvirusbyhostSets(VirusLogica.hostvirusMap);
+            VirusLogica.getaskedvirusSets(VirusLogica.virusbyhostSet1, VirusLogica.virusbyhostSet2);
+            if (rbID.isSelected()) {
+                Virus.sort = 0;
+            }
+            if (rbHostamount.isSelected()) {
+                Virus.sort = 1;
+            }
+            if (rbClass.isSelected()) {
+                Virus.sort = 2;
+            }
             virus1Textarea.setText("");
             virus2Textarea.setText("");
             overlapTextarea.setText("");
-            VirusLogica.setAmounthost(virusList);
-            VirusLogica.getvirusbyhostSets(VirusLogica.hostvirusMap);
-            VirusLogica.getaskedvirusLists(VirusLogica.virusbyhostSet1, VirusLogica.virusbyhostSet2);
-            if (rbID.isSelected()) {
-                Virus.sorteer = 0;
-            }
-            if (rbHostamount.isSelected()) {
-                Virus.sorteer= 1;
-            }
-            if (rbClass.isSelected()) {
-                Virus.sorteer= 2;
-            }
-            VirusLogica.createSets(VirusLogica.virus1Set, VirusLogica.virus2Set);
+            VirusLogica.compareSets(VirusLogica.virus1Set, VirusLogica.virus2Set);
         }
     }
 

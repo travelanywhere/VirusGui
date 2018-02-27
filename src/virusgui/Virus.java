@@ -101,17 +101,17 @@ public class Virus implements Comparable<Virus>{
 
     /**
      *
-     * @param numberHost
+     * @param amountHost
      */
-    public void setNumberHost(Integer numberHost) {
-        this.amountHost = numberHost;
+    public void setAmountHost(Integer amountHost) {
+        this.amountHost = amountHost;
     }
 
     @Override
     public int compareTo(Virus o) {
-        //Fini heeft geholpen bij het opzetten van deze methoden om de resultaten te sorteren.
+        //Fini heeft geholpen bij het opzetten van deze methoden om de Lists te sorteren.
         Virus vi = (Virus) o;
-        switch (sorteer){
+        switch (sort){
             case 0:
                 return vi.virusID - this.virusID;
             case 1:
@@ -121,10 +121,8 @@ public class Virus implements Comparable<Virus>{
             default:
                 return 0;      
     }      
-    }
-    
-public static int sorteer;
-       
+    }   
+public static int sort;      
 }
     
     
