@@ -10,15 +10,14 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 /**
  * @author Nicky van Bergen, made in Austria & the Netherlands
- * @version IDE 8.2 & Java 8
- * In dit bestand wordt de GUI gemaakt en de bijbehorende actionPerformed
+ * @version 2 In dit bestand wordt de GUI gemaakt en de bijbehorende
+ * actionPerformed
  */
 public class VirusGui extends JFrame implements ActionListener {
 
     /**
      * Declaratie van gebruikte elementen voor de GUI
      */
-
     JButton openButton;
     JFileChooser FileChooser;
     JLabel bestandLabel;
@@ -58,12 +57,12 @@ public class VirusGui extends JFrame implements ActionListener {
         frame.show();
     }
 
+    /**
+     * In deze methoden wordt de GUI gemaakt. De JComboBoxen bevatten nog een
+     * string met NULL. Hier wordt na het inlezen van het bestand pas de juiste
+     * String met opties gepaaltst.
+     */
     public void createGUI() {
-        /**
-         * In deze methoden wordt de Gui gemaakt. De JComboBoxen bevatten nog
-         * een string met NULL. Hier wordt na het inlezen pas de juiste String
-         * met opties gepaaltst.
-         */
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Container window = getContentPane();
         window.setLayout(new FlowLayout());
@@ -115,10 +114,10 @@ public class VirusGui extends JFrame implements ActionListener {
         virus2Label = new JLabel("VirusList 2:");
         virus1Textarea = new JTextArea(15, 20);
         virus2Textarea = new JTextArea(15, 20);
-        scrollPane = new JScrollPane(virus1Textarea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        
+        scrollPane = new JScrollPane(virus1Textarea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         virus1Textarea.setEditable(false);
-        scrollPane2 = new JScrollPane(virus2Textarea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane2 = new JScrollPane(virus2Textarea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         virus2Textarea.setEditable(false);
         window.add(virus1Label);
         window.add(scrollPane);
@@ -127,7 +126,7 @@ public class VirusGui extends JFrame implements ActionListener {
 
         overlapLabel = new JLabel("                     overlap viruses from hosts");
         overlapTextarea = new JTextArea(15, 20);
-        scrollPane3 = new JScrollPane(overlapTextarea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);;
+        scrollPane3 = new JScrollPane(overlapTextarea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);;
         window.add(overlapLabel);
         window.add(scrollPane3);
 
@@ -141,22 +140,22 @@ public class VirusGui extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         /**
          * In de actionPerformed wordt gekeken welke acties er door de gebruiker
-         * worden uitgevoerd Wanneer de gebruiker op de openButton klikt kan er
-         * met de filechooser een bestand gekozen. Ook wordt de methode readFile, setAmountHost en makeComboList
-         * aangeroepen. Wanneer submit wordt aangeklikt methodes getvirusbyhosSets,
-         * getaskedvirusSets en compareSets aangeroepen. Vervolgens
-         * wordt gecheckt welke sorteering is gekozen en wordt de compare to aangeroepen met de int sort.
+         * worden uitgevoerd. Wanneer de gebruiker op de openButton klikt kan er
+         * met de filechooser een bestand worden gekozen. Ook wordt de methode
+         * readFile, setAmountHost en makeComboList aangeroepen. Wanneer submit
+         * wordt aangeklikt methodes getvirusbyhosSets, getaskedvirusSets en
+         * compareSets aangeroepen. Vervolgens wordt gecheckt welke sorteering
+         * is gekozen en wordt de compare to aangeroepen met de int sort.
          */
-        String bestand;
         FileChooser = new JFileChooser();
         if (event.getSource() == openButton) {
             virusList = new ArrayList<>();
             int reply = FileChooser.showOpenDialog(this);
             File selectFile = FileChooser.getSelectedFile();
             if (reply == JFileChooser.APPROVE_OPTION) {
-                bestand = (selectFile.getAbsolutePath());
+                String bestand = (selectFile.getAbsolutePath());
                 bestandNaam.setText(selectFile.getName());
-            VirusLogica.readFile(bestand);  
+                VirusLogica.readFile(bestand);
             }
             VirusLogica.makeComboboxList(virusList);
             VirusLogica.setAmounthost(virusList);
@@ -165,13 +164,13 @@ public class VirusGui extends JFrame implements ActionListener {
             VirusLogica.getvirusbyhostSets(VirusLogica.hostvirusMap);
             VirusLogica.getaskedvirusSets(VirusLogica.virusbyhostSet1, VirusLogica.virusbyhostSet2);
             if (rbID.isSelected()) {
-                Virus.sort = 0;
-            }
-            if (rbHostamount.isSelected()) {
                 Virus.sort = 1;
             }
-            if (rbClass.isSelected()) {
+            if (rbHostamount.isSelected()) {
                 Virus.sort = 2;
+            }
+            if (rbClass.isSelected()) {
+                Virus.sort = 3;
             }
             virus1Textarea.setText("");
             virus2Textarea.setText("");

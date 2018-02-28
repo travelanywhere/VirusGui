@@ -2,11 +2,11 @@ package virusgui;
 
 /**
  * @author Nicky van Bergen, made in Austria & the Netherlands
- * @version IDE 8.2 & Java 8
- * In dit bestand wordt het object virus gedefineerd en staat de bebehorende constructor en de getters en setters
+ * @version 2 
+ * In dit bestand wordt het object Virus gedefineerd en staat de bebehorende constructor en de getters en setters
  */
+public class Virus implements Comparable<Virus> {
 
-public class Virus implements Comparable<Virus>{
     private int virusID;
     private String classification;
     private int hostID;
@@ -14,8 +14,12 @@ public class Virus implements Comparable<Virus>{
     private int amountHost;
 
     /**
-     *
-     * @param virusID
+     * variable geeft aan welke case gebruikt moet worden voor het sorteren
+     */
+    public static int sort;
+
+    /**
+     * @param virusID 
      * @param classification
      * @param hostID
      * @param hostName
@@ -28,7 +32,6 @@ public class Virus implements Comparable<Virus>{
     }
 
     /**
-     *
      * @param virusID
      */
     public void setVirusID(int virusID) {
@@ -36,7 +39,6 @@ public class Virus implements Comparable<Virus>{
     }
 
     /**
-     *
      * @param classification
      */
     public void setClassification(String classification) {
@@ -44,7 +46,6 @@ public class Virus implements Comparable<Virus>{
     }
 
     /**
-     *
      * @param hostID
      */
     public void setHostID(int hostID) {
@@ -52,7 +53,6 @@ public class Virus implements Comparable<Virus>{
     }
 
     /**
-     *
      * @param hostName
      */
     public void setHostName(String hostName) {
@@ -60,47 +60,41 @@ public class Virus implements Comparable<Virus>{
     }
 
     /**
-     *
-     * @return
+     * @return het virus ID
      */
     public int getVirusID() {
         return virusID;
     }
 
     /**
-     *
-     * @return
+     * @return de classificatie
      */
     public String getClassification() {
         return classification;
     }
 
     /**
-     *
-     * @return
+     * @return de host ID
      */
     public int getHostID() {
         return hostID;
     }
 
     /**
-     *
-     * @return
+     * @return de name van de host
      */
     public String getHostName() {
         return hostName;
     }
 
     /**
-     *
-     * @return
+     * @return de frequentie dat de hostid voorkomt
      */
-    public Integer getNumberHost() {
+    public Integer getAmountHost() {
         return amountHost;
     }
 
     /**
-     *
      * @param amountHost
      */
     public void setAmountHost(Integer amountHost) {
@@ -109,21 +103,32 @@ public class Virus implements Comparable<Virus>{
 
     @Override
     public int compareTo(Virus o) {
-        //Fini heeft geholpen bij het opzetten van deze methoden om de Lists te sorteren.
         Virus vi = (Virus) o;
-        switch (sort){
-            case 0:
-                return vi.virusID - this.virusID;
+        switch (sort) {
             case 1:
-                return vi.classification.compareTo(this.classification);
+                if (vi.virusID > this.virusID) {
+                    return -1;
+                }
+                if (vi.virusID < this.virusID) {
+                    return 1;
+                }
+                if (vi.virusID == this.virusID) {
+                    return 0;
+                }
             case 2:
-                return vi.amountHost - this.amountHost;
+                return vi.classification.compareTo(this.classification);
+            case 3:
+                if (vi.amountHost > this.amountHost) {
+                    return -1;
+                }
+                if (vi.amountHost < this.amountHost) {
+                    return 1;
+                }
+                if (vi.amountHost == this.amountHost) {
+                    return 0;
+                }
             default:
-                return 0;      
-    }      
-    }   
-public static int sort;      
+                return 0;
+        }
+    }
 }
-    
-    
-
